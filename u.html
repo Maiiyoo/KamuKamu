@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Kamu 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --pink:#ff6b9d;
+  --rose:#ff3374;
+  --soft:#ffd6e7;
+  --purple:#c77dff;
+  --gold:#ffd700;
+  --dark:#0d0015;
+  --mid:#1a0030;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  font-family:'Nunito',sans-serif;
+  background:var(--dark);
+  color:white;
+  cursor:none;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+#cursor{
+  position:fixed;
+  width:18px;height:18px;
+  background:var(--pink);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform .1s, width .2s, height .2s;
+  mix-blend-mode:screen;
+}
+#cursor-trail{
+  position:fixed;
+  width:36px;height:36px;
+  border:2px solid var(--purple);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:all .18s ease;
+  opacity:.5;
+}
+
+/* ===== CANVAS BG ===== */
+#bgCanvas{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;
+}
+
+/* ===== FLOATING PARTICLES ===== */
+.particle{
+  position:fixed;
+  pointer-events:none;
+  z-index:1;
+  animation:floatUp 4s ease-in forwards;
+  font-size:18px;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1;}
+  100%{transform:translateY(-100vh) rotate(720deg) scale(0);opacity:0;}
+}
+
+/* ===== LOADING ===== */
+#loadingScreen{
+  position:fixed;
+  inset:0;
+  background:var(--dark);
+  z-index:100000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:opacity .8s ease;
+}
+.loading-heart{
+  font-size:80px;
+  animation:heartbeat 1s infinite, spinHue 3s linear infinite;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.25);}
+}
+@keyframes spinHue{
+  0%{filter:hue-rotate(0deg);}
+  100%{filter:hue-rotate(360deg);}
+}
+#loadingScreen h2{
+  font-family:'Dancing Script',cursive;
+  font-size:26px;
+  color:var(--soft);
+  margin-top:20px;
+  animation:blink 1.4s infinite;
+}
+#loadingScreen p{
+  font-size:13px;
+  color:#888;
+  margin-top:8px;
+  animation:blink 1.4s .3s infinite;
+}
+@keyframes blink{
+  0%,100%{opacity:1;}
+  50%{opacity:.3;}
+}
+
+/* ===== MAIN SCENE ===== */
+#scene{
+  position:fixed;
+  inset:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card{
+  position:relative;
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,107,157,.35);
+  border-radius:28px;
+  padding:30px 28px 24px;
+  max-width:340px;
+  width:90%;
+  backdrop-filter:blur(18px);
+  box-shadow:0 0 60px rgba(255,107,157,.15), 0 0 120px rgba(199,125,255,.08);
+  text-align:center;
+  animation:cardIn .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes cardIn{
+  from{transform:scale(.5) translateY(60px);opacity:0;}
+  to{transform:scale(1) translateY(0);opacity:1;}
+}
+
+.card-badge{
+  position:absolute;
+  top:-14px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--rose),var(--purple));
+  border-radius:30px;
+  padding:4px 18px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+
+.card-avatar{
+  width:90px;height:90px;
+  border-radius:50%;
+  border:3px solid var(--pink);
+  margin:0 auto 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+  background:rgba(255,107,157,.1);
+  animation:avatarFloat 3s ease-in-out infinite;
+  box-shadow:0 0 30px rgba(255,107,157,.4);
+}
+@keyframes avatarFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+.typing-area{
+  min-height:100px;
+  font-size:15px;
+  line-height:1.7;
+  color:#ffe0ee;
+  font-weight:600;
+  margin:10px 0 16px;
+}
+
+.typing-cursor{
+  display:inline-block;
+  width:2px;height:16px;
+  background:var(--pink);
+  animation:blinkCursor .7s infinite;
+  vertical-align:middle;
+  margin-left:2px;
+}
+@keyframes blinkCursor{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
+
+.btn-area{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  margin-top:4px;
+}
+
+.btn{
+  padding:10px 18px;
+  border:none;
+  border-radius:50px;
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:none;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+  overflow:hidden;
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,.2);
+  transform:translateX(-100%);
+  transition:.3s;
+}
+.btn:hover::before{transform:translateX(0);}
+.btn:hover{transform:scale(1.08);}
+.btn:active{transform:scale(.95);}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--rose),var(--purple));
+  color:white;
+  box-shadow:0 4px 20px rgba(255,51,116,.4);
+}
+.btn-secondary{
+  background:rgba(255,255,255,.1);
+  color:#ddd;
+  border:1px solid rgba(255,255,255,.2);
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar{
+  height:3px;
+  background:rgba(255,255,255,.1);
+  border-radius:3px;
+  margin-bottom:14px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--rose),var(--purple));
+  border-radius:3px;
+  transition:width .5s ease;
+}
+
+/* ===== SCORE DISPLAY ===== */
+.score-stars{
+  font-size:28px;
+  letter-spacing:4px;
+  margin:8px 0;
+  animation:starPop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes starPop{
+  from{transform:scale(0);}
+  to{transform:scale(1);}
+}
+
+/* ===== GALAXY SCENE ===== */
+#galaxyScene{
+  position:fixed;
+  inset:0;
+  background:black;
+  z-index:9999;
+  display:none;
+  overflow:hidden;
+}
+#galaxyCanvas{
+  position:absolute;
+  inset:0;
+}
+
+/* final message overlay */
+#finalOverlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+  opacity:0;
+  transition:opacity 1.5s ease;
+}
+#finalPhoto{
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  border:4px solid var(--pink);
+  object-fit:cover;
+  background:radial-gradient(circle, #ff6b9d, #c77dff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+  box-shadow:0 0 60px rgba(255,107,157,.6), 0 0 120px rgba(199,125,255,.3);
+  animation:finalPulse 2s ease-in-out infinite;
+  transform:scale(0);
+  transition:transform 1.2s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes finalPulse{
+  0%,100%{box-shadow:0 0 60px rgba(255,107,157,.6);}
+  50%{box-shadow:0 0 100px rgba(255,107,157,.9), 0 0 180px rgba(199,125,255,.5);}
+}
+#finalMsg{
+  margin-top:28px;
+  text-align:center;
+  font-family:'Dancing Script',cursive;
+  font-size:28px;
+  color:white;
+  text-shadow:0 0 30px rgba(255,107,157,.8);
+  padding:0 20px;
+  opacity:0;
+  transform:translateY(30px);
+  transition:all 1s ease .5s;
+}
+#finalBtn{
+  margin-top:20px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .8s ease 1s;
+}
+
+/* ===== SCROLLING TEXT (marquee-style) ===== */
+#scrollingText{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,51,116,.15),transparent);
+  border-top:1px solid rgba(255,107,157,.2);
+  padding:10px 0;
+  z-index:50;
+  overflow:hidden;
+  display:none;
+}
+.marquee-inner{
+  display:inline-block;
+  white-space:nowrap;
+  animation:marquee 30s linear infinite;
+  font-size:13px;
+  color:var(--soft);
+  font-weight:600;
+}
+@keyframes marquee{
+  from{transform:translateX(100vw);}
+  to{transform:translateX(-100%);}
+}
+
+/* ===== SPARKLE ===== */
+.sparkle{
+  position:fixed;
+  pointer-events:none;
+  z-index:5000;
+  width:8px;height:8px;
+  background:var(--gold);
+  border-radius:50%;
+  animation:sparkleAnim .8s ease forwards;
+}
+@keyframes sparkleAnim{
+  0%{transform:scale(1);opacity:1;}
+  100%{transform:scale(0) translate(var(--tx),var(--ty));opacity:0;}
+}
+
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;
+  top:20px;left:50%;
+  transform:translateX(-50%) translateY(-80px);
+  background:rgba(255,107,157,.9);
+  color:white;
+  padding:10px 24px;
+  border-radius:50px;
+  font-weight:700;
+  font-size:14px;
+  z-index:99999;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ===== WAVE EMOJI ===== */
+.wave-emoji{
+  display:inline-block;
+  animation:waveHand .5s ease-in-out infinite alternate;
+}
+@keyframes waveHand{
+  from{transform:rotate(-10deg);}
+  to{transform:rotate(20deg);}
+}
+
+/* ===== POPUP HOVER EMOJI ===== */
+.emoji-bounce{
+  display:inline-block;
+  animation:emojiBounce 1s ease-in-out infinite;
+}
+@keyframes emojiBounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+
+/* ===== QUIZ HIGHLIGHT ===== */
+.quiz-option{
+  position:relative;
+}
+.quiz-option::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:50px;
+  border:2px solid transparent;
+  transition:.3s;
+}
+.quiz-option:hover::after{
+  border-color:var(--gold);
+}
+
+/* ===== RAIN LETTERS (final scene) ===== */
+.rainLetter{
+  position:fixed;
+  font-size:20px;
+  pointer-events:none;
+  z-index:9998;
+  animation:rainFall linear forwards;
+}
+@keyframes rainFall{
+  0%{transform:translateY(-40px) rotate(0deg);opacity:1;}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:0;}
+}
+
+/* ===== SCREEN SHAKE ===== */
+@keyframes shake{
+  0%,100%{transform:translate(0,0);}
+  20%{transform:translate(-5px,5px);}
+  40%{transform:translate(5px,-5px);}
+  60%{transform:translate(-3px,3px);}
+  80%{transform:translate(3px,-3px);}
+}
+.shake{animation:shake .4s ease;}
+
+/* ===== NOTIFICATION DOT ===== */
+.notif-dot{
+  width:8px;height:8px;
+  background:var(--rose);
+  border-radius:50%;
+  display:inline-block;
+  margin-left:4px;
+  animation:notifPulse 1s infinite;
+}
+@keyframes notifPulse{
+  0%,100%{transform:scale(1);opacity:1;}
+  50%{transform:scale(1.5);opacity:.7;}
+}
+
+/* ===== LOVE METER ===== */
+.love-meter-wrap{
+  margin:10px 0;
+  position:relative;
+}
+.love-meter-label{
+  font-size:12px;
+  color:#bbb;
+  margin-bottom:4px;
+  text-align:left;
+}
+.love-meter-bar{
+  height:10px;
+  background:rgba(255,255,255,.1);
+  border-radius:10px;
+  overflow:hidden;
+}
+.love-meter-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--rose),var(--gold));
+  border-radius:10px;
+  width:0%;
+  transition:width 1.5s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* OVERLAY HEARTS */
+#heartOverlay{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:8000;
+}
+
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor">❤️</div>
+<div id="cursor-trail"></div>
+
+<!-- BG CANVAS -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- TOAST -->
+<div id="toast" id="toast">💖</div>
+
+<!-- HEART OVERLAY -->
+<div id="heartOverlay"></div>
+
+<!-- LOADING -->
+<div id="loadingScreen">
+  <div class="loading-heart">💝</div>
+  <h2>Ada sesuatu buat kamu... 🤫</h2>
+  <p>Klik dimana aja untuk buka yaa 💌</p>
+</div>
+
+<!-- MAIN SCENE -->
+<div id="scene">
+  <div class="card" id="mainCard">
+    <div class="card-badge">✨ Spesial Buat Kamu ✨</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="card-avatar" id="cardAvatar">🥺</div>
+    <div class="typing-area" id="typingArea"><span id="typingText"></span><span class="typing-cursor" id="cursor2"></span></div>
+    <div class="btn-area" id="btnArea"></div>
+  </div>
+</div>
+
+<!-- GALAXY FINAL SCENE -->
+<div id="galaxyScene">
+  <canvas id="galaxyCanvas"></canvas>
+  <div id="finalOverlay">
+    <div class="finalPhoto">
+      <img src="bwa.jpeg">
+      </div>
+    <div id="finalMsg"></div>
+    <div id="finalBtn">
+      <button class="btn btn-primary" onclick="openWA()">💬 Chat Aku Sini</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLLING TEXT (berjalan di bawah) -->
+<div id="scrollingText">
+  <span class="marquee-inner" id="marqueeText"></span>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ============================================================
+// CURSOR
+// ============================================================
+const cur = document.getElementById('cursor');
+const curTrail = document.getElementById('cursor-trail');
+let mx=0,my=0,tx=0,ty=0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx+'px';
+  cur.style.top = my+'px';
+  spawnSparkle(mx, my);
+});
+
+setInterval(()=>{
+  tx += (mx-tx)*.15;
+  ty += (my-ty)*.15;
+  curTrail.style.left = tx+'px';
+  curTrail.style.top = ty+'px';
+}, 16);
+
+// ============================================================
+// SPARKLE ON MOVE
+// ============================================================
+let sparkleThrottle = 0;
+function spawnSparkle(x, y){
+  if(Date.now() - sparkleThrottle < 80) return;
+  sparkleThrottle = Date.now();
+  const emojis = ['✨','💫','⭐','🌟','💖','💕'];
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  s.style.cssText = `left:${x}px;top:${y}px;font-size:14px;background:none;width:auto;height:auto;--tx:${(Math.random()-0.5)*60}px;--ty:${(Math.random()-0.5)*60}px;`;
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(), 800);
+}
+
+// ============================================================
+// BG CANVAS - Aurora + Stars
+// ============================================================
+const bgCanvas = document.getElementById('bgCanvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgW, bgH;
+
+function resizeBg(){
+  bgCanvas.width = bgW = window.innerWidth;
+  bgCanvas.height = bgH = window.innerHeight;
+}
+resizeBg();
+window.addEventListener('resize', resizeBg);
+
+const starsArr = [];
+for(let i=0;i<250;i++){
+  starsArr.push({
+    x: Math.random(),
+    y: Math.random(),
+    r: Math.random()*1.5+0.3,
+    tw: Math.random()*Math.PI*2,
+    speed: Math.random()*.02+.005
+  });
+}
+
+let auroraT = 0;
+function drawBg(){
+  bgCtx.clearRect(0,0,bgW,bgH);
+
+  // deep space gradient
+  const grad = bgCtx.createRadialGradient(bgW/2,bgH/2,0,bgW/2,bgH/2,bgW*.8);
+  grad.addColorStop(0,'#1a0030');
+  grad.addColorStop(1,'#0d0015');
+  bgCtx.fillStyle = grad;
+  bgCtx.fillRect(0,0,bgW,bgH);
+
+  // aurora waves
+  auroraT += .005;
+  for(let a=0;a<3;a++){
+    const grd = bgCtx.createLinearGradient(0,bgH*.3+a*80,0,bgH*.7+a*80);
+    grd.addColorStop(0,'transparent');
+    grd.addColorStop(.5,`rgba(${a===0?'199,125,255':a===1?'255,107,157':'100,200,255'},.06)`);
+    grd.addColorStop(1,'transparent');
+    bgCtx.beginPath();
+    bgCtx.moveTo(0, bgH*.5);
+    for(let x=0;x<=bgW;x+=20){
+      const y = bgH*.45 + a*50 + Math.sin(x*.003 + auroraT*(a+1)) * 60;
+      bgCtx.lineTo(x, y);
+    }
+    bgCtx.lineTo(bgW, bgH);
+    bgCtx.lineTo(0, bgH);
+    bgCtx.closePath();
+    bgCtx.fillStyle = grd;
+    bgCtx.fill();
+  }
+
+  // stars
+  starsArr.forEach(s=>{
+    s.tw += s.speed;
+    const alpha = .5 + .5*Math.sin(s.tw);
+    bgCtx.beginPath();
+    bgCtx.arc(s.x*bgW, s.y*bgH, s.r, 0, Math.PI*2);
+    bgCtx.fillStyle = `rgba(255,220,240,${alpha})`;
+    bgCtx.fill();
+  });
+
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// shooting stars
+setInterval(()=>{
+  const ss = document.createElement('div');
+  ss.style.cssText = `position:fixed;width:2px;height:${Math.random()*60+40}px;background:linear-gradient(white,transparent);top:${Math.random()*50}%;left:${Math.random()*100}%;transform:rotate(-45deg);z-index:2;pointer-events:none;animation:shoot .9s linear forwards;`;
+  document.body.appendChild(ss);
+  setTimeout(()=>ss.remove(), 900);
+  if(!document.querySelector('#shootStyle')){
+    const st=document.createElement('style');
+    st.id='shootStyle';
+    st.textContent='@keyframes shoot{to{transform:translate(-600px,600px) rotate(-45deg);opacity:0;}}';
+    document.head.appendChild(st);
+  }
+}, 1800);
+
+// ============================================================
+// LOVE RAIN
+// ============================================================
+function loveRain(n=15){
+  const items = ['💖','💕','💗','💓','💘','💝','🌸','✨','⭐','🌺'];
+  for(let i=0;i<n;i++){
+    setTimeout(()=>{
+      const l = document.createElement('div');
+      l.className = 'particle';
+      l.textContent = items[Math.floor(Math.random()*items.length)];
+      l.style.cssText = `left:${Math.random()*100}%;bottom:0;animation-duration:${Math.random()*2+2}s;animation-delay:${Math.random()*0.5}s;font-size:${Math.random()*18+12}px;`;
+      document.body.appendChild(l);
+      setTimeout(()=>l.remove(), 4500);
+    }, i*100);
+  }
+}
+
+// click love rain
+document.addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  spawnClickHearts(e.clientX, e.clientY);
+});
+function spawnClickHearts(x, y){
+  for(let i=0;i<5;i++){
+    const h = document.createElement('div');
+    const emojis=['💖','💕','💗','✨','🌸'];
+    h.textContent = emojis[i];
+    h.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${Math.random()*12+14}px;pointer-events:none;z-index:9999;animation:clickHeart .8s ease forwards;--dx:${(Math.random()-0.5)*100}px;--dy:${-(Math.random()*80+40)}px;`;
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(), 800);
+  }
+  if(!document.querySelector('#clickHeartStyle')){
+    const st=document.createElement('style');
+    st.id='clickHeartStyle';
+    st.textContent='@keyframes clickHeart{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0;}}';
+    document.head.appendChild(st);
+  }
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, duration=2000){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+// ============================================================
+// TYPING ENGINE
+// ============================================================
+let currentTyping = null;
+function typeText(txt, cb, speed=38){
+  if(currentTyping) clearInterval(currentTyping);
+  const el = document.getElementById('typingText');
+  const cursor2 = document.getElementById('cursor2');
+  cursor2.style.display='inline-block';
+  el.innerHTML='';
+  let i=0;
+  currentTyping = setInterval(()=>{
+    if(i<txt.length){
+      el.innerHTML += txt[i]==='\n' ? '<br>' : txt[i];
+      i++;
+    }else{
+      clearInterval(currentTyping);
+      cursor2.style.display='none';
+      if(cb) cb();
+    }
+  }, speed);
+}
+
+function setAvatar(emoji){
+  const av = document.getElementById('cardAvatar');
+  av.style.animation='none';
+  av.textContent = emoji;
+  void av.offsetWidth;
+  av.style.animation='avatarFloat 3s ease-in-out infinite, avatarPop .4s cubic-bezier(.34,1.56,.64,1)';
+  if(!document.querySelector('#avatarPopStyle')){
+    const st=document.createElement('style');
+    st.id='avatarPopStyle';
+    st.textContent='@keyframes avatarPop{from{transform:scale(.5);}to{transform:scale(1);}}';
+    document.head.appendChild(st);
+  }
+}
+
+function setButtons(...configs){
+  const area = document.getElementById('btnArea');
+  area.innerHTML='';
+  configs.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = `btn ${c.type||'btn-primary'} quiz-option`;
+    b.textContent = c.text;
+    b.onclick = c.fn;
+    area.appendChild(b);
+  });
+}
+
+function setProgress(pct){
+  document.getElementById('progressFill').style.width = pct+'%';
+}
+
+// ============================================================
+// LOADING
+// ============================================================
+let gameReady = false;
+const loading = document.getElementById('loadingScreen');
+const music = document.getElementById('bgMusic');
+
+document.addEventListener('click', function startApp(){
+  if(loading.style.display==='none') return;
+  loading.style.opacity='0';
+  setTimeout(()=>{ loading.style.display='none'; }, 700);
+  music.play().catch(()=>{});
+  if(!gameReady){ gameReady=true; stepWelcome(); }
+  document.removeEventListener('click', startApp);
+});
+
+// ============================================================
+// ============================================================
+// STORY STEPS
+// ============================================================
+// ============================================================
+
+let score = 0;
+const totalSteps = 8;
+
+// STEP 0: WELCOME
+function stepWelcome(){
+  setProgress(5);
+  setAvatar('🥺');
+  loveRain(8);
+  typeText('Psst... kamu! 👀\n\nIya kamu yang lagi baca ini...\n\nAda pesan spesial nih buat kamu 💌', ()=>{
+    setButtons(
+      {text:'Eh apa? 👀', fn: stepIntro}
+    );
+  });
+}
+
+// STEP 1: INTRO
+function stepIntro(){
+  setProgress(15);
+  setAvatar('😊');
+  loveRain(5);
+  typeText('Hiii 👋\n\nJadi... aku ada sesuatu yang udah lama mau aku bilang...\n\nTapi agak malu sih hehe 🙈', ()=>{
+    setButtons(
+      {text:'Bilang ajaaa 😆', fn: stepConfession}
+    );
+  });
+}
+
+// STEP 2: CONFESSION
+function stepConfession(){
+  setProgress(25);
+  setAvatar('😳');
+  typeText('Oke jadi gini...\n\nKamu itu beda banget dari yang lain 😭\n\nSerius deh, beda banget. Kayak nemu harta karun di tong sampah...\n\n...maksudnya kamu tuh BERHARGA ya bukan sampahnya 😭🙏', ()=>{
+    showToast('😭 Aduh jujur banget sih wkwk');
+    setButtons(
+      {text:'Hahaha lucu 😂', fn: stepGame},
+      {text:'Makasih 🥺', fn: stepGame}
+    );
+  });
+}
+
+// STEP 3: MINTA MAIN QUIZ
+function stepGame(){
+  setProgress(35);
+  setAvatar('😏');
+  typeText('Oke sekarang aku mau tanya-tanya yaa...\n\nJangan salah jawab loh hihi 😈\n\nKamu siap? 👀', ()=>{
+    setButtons(
+      {text:'Siap! 💪', fn: quiz1},
+      {text:'Hmm ga mau 😒', fn: stepGameForce}
+    );
+  });
+}
+
+function stepGameForce(){
+  setAvatar('🥺');
+  document.getElementById('mainCard').classList.add('shake');
+  setTimeout(()=>document.getElementById('mainCard').classList.remove('shake'),500);
+  typeText('Yaaa pleasee... 🥺\n\nAku udah capek-capek buatin ini loh...\n\nMau gak ya pleasee pleaseeee 🙏🙏', ()=>{
+    setButtons(
+      {text:'Oke deh 😅', fn: quiz1}
+    );
+  });
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+
+// Quiz 1
+function quiz1(){
+  setProgress(45);
+  setAvatar('🤔');
+  typeText('Pertanyaan 1/4 💭\n\nMenurut kamu, aku itu orangnya gimana? 🤩', ()=>{
+    setButtons(
+      {text:'Lucu & menyenangkan 😂', fn: ()=>q1Answer(true)},
+      {text:'Biasa aja sih 😐', fn: ()=>q1Answer(false)}
+    );
+  });
+}
+function q1Answer(benar){
+  if(benar){
+    score++;
+    showToast('✅ Jawaban cerdas!');
+    loveRain(5);
+  } else {
+    showToast('😤 Ih bohong kamu!');
+    setAvatar('😤');
+  }
+  setTimeout(quiz2, 500);
+}
+
+// Quiz 2
+function quiz2(){
+  setProgress(55);
+  setAvatar('😌');
+  typeText('Pertanyaan 2/4 💭\n\nKalau kamu lagi sedih, kamu pengennya apa? 🥺', ()=>{
+    setButtons(
+      {text:'Ada kamu 💖', fn: ()=>q2Answer(true)},
+      {text:'Tidur aja 😴', fn: ()=>q2Answer(false)}
+    );
+  });
+}
+function q2Answer(benar){
+  if(benar){
+    score++;
+    loveRain(8);
+    showToast('💖 Makasih udah mau ada aku!');
+  } else {
+    showToast('😭 Tidur doang tanpa aku?!');
+  }
+  setTimeout(quiz3, 500);
+}
+
+// Quiz 3
+function quiz3(){
+  setProgress(65);
+  setAvatar('🥰');
+  typeText('Pertanyaan 3/4 💭\n\nAku itu lebih mirip apa? 😂', ()=>{
+    setButtons(
+      {text:'Kucing manja 🐱', fn: ()=>q3Answer(true)},
+      {text:'Nyamuk ganggu 🦟', fn: ()=>q3Answer(false)}
+    );
+  });
+}
+function q3Answer(benar){
+  if(benar){
+    score++;
+    loveRain(10);
+    showToast('😼 Meong!');
+  } else {
+    showToast('😤 HHHH nggggg!!');
+    setAvatar('😠');
+    document.getElementById('mainCard').classList.add('shake');
+    setTimeout(()=>document.getElementById('mainCard').classList.remove('shake'),500);
+  }
+  setTimeout(quiz4, 800);
+}
+
+// Quiz 4
+function quiz4(){
+  setProgress(75);
+  setAvatar('👀');
+  typeText('Pertanyaan terakhir 4/4 👀\n\nKamu mau ga aku ada di hidup kamu? 🥺\n\n(Pikir baik-baik ya...)', ()=>{
+    setButtons(
+      {text:'Mau banget 💖', fn: ()=>q4Answer(true)},
+      {text:'Hmm tergantung... 🤔', fn: ()=>q4Answer(false)}
+    );
+  });
+}
+function q4Answer(benar){
+  if(benar){
+    score++;
+    loveRain(20);
+    showToast('💖💖💖 YEYYY!!!');
+  } else {
+    showToast('😤 Tergantung apa cobaa!');
+  }
+  setTimeout(quizResult, 800);
+}
+
+// RESULT
+function quizResult(){
+  setProgress(82);
+  let emoji, msg, stars;
+
+  if(score===4){
+    emoji='🏆';
+    stars='⭐⭐⭐⭐';
+    msg=`Perfect score! ${score}/4 ✨\n\nKamu tahu aku banget deh...\natau mungkin kamu juga sayang sama aku? 🥺💖`;
+    loveRain(25);
+  } else if(score>=2){
+    emoji='😊';
+    stars='⭐⭐⭐';
+    msg=`Lumayan! Skor kamu ${score}/4 ✨\n\nNanti kita kenal lebih lagi ya...\nbiar kamu makin tau aku 😊💕`;
+    loveRain(12);
+  } else {
+    emoji='😅';
+    stars='⭐';
+    msg=`Aduh... ${score}/4 aja? 😭\n\nGapapa, nanti aku ajarin aku deh...\nmaksudnya ajarin TENTANG aku wkwk 😂`;
+  }
+
+  setAvatar(emoji);
+  typeText(msg, ()=>{
+    const area = document.getElementById('btnArea');
+    area.innerHTML = `<div class="score-stars">${stars}</div>`;
+    const btn = document.createElement('button');
+    btn.className='btn btn-primary';
+    btn.style.marginTop='10px';
+    btn.textContent = 'Lanjut yuk 💌';
+    btn.onclick = stepEnding;
+    area.appendChild(btn);
+  });
+}
+
+// ENDING 1
+function stepEnding(){
+  setProgress(90);
+  setAvatar('😍');
+  loveRain(15);
+  typeText('Dan yang paling penting...\n\nAku cuma mau bilang satu hal doang nih...\n\nSerius deh ini penting banget 🥺', ()=>{
+    setButtons(
+      {text:'Apaan sih? 🙈', fn: stepEnding2}
+    );
+  });
+}
+
+function stepEnding2(){
+  setAvatar('💝');
+  loveRain(20);
+  typeText('Kamu itu...\n\nBeneran bikin hari-hari aku lebih berwarna 🌈\n\nDan aku bersyukur banget kamu ada 🥺\n\nMakasih udah jadi kamu yang sekarang 💖', ()=>{
+    setButtons(
+      {text:'Mau liat sesuatu? ✨', fn: stepPreGalaxy}
+    );
+  });
+}
+
+function stepPreGalaxy(){
+  setProgress(98);
+  setAvatar('🚀');
+  typeText('Oke... aku mau tunjukin sesuatu yang aku siapain khusus buat kamu...\n\nSiap-siap yaa... 🌌✨', ()=>{
+    setButtons(
+      {text:'SIAP! 🚀', fn: startGalaxy}
+    );
+  });
+}
+
+// ============================================================
+// GALAXY SCENE
+// ============================================================
+function startGalaxy(){
+  setProgress(100);
+  document.getElementById('galaxyScene').style.display='block';
+
+  const canvas = document.getElementById('galaxyCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let gStars = [];
+  for(let i=0;i<500;i++){
+    gStars.push({
+      x: (Math.random()-.5)*canvas.width,
+      y: (Math.random()-.5)*canvas.height,
+      z: Math.random()*canvas.width,
+      px:0, py:0
+    });
+  }
+
+  let speed=2, zoom=1, frame=0;
+  let phase='warp'; // warp -> slow -> show
+
+  function animGalaxy(){
+    ctx.fillStyle='rgba(0,0,0,.25)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    const cx=canvas.width/2, cy=canvas.height/2;
+    ctx.save();
+    ctx.translate(cx,cy);
+
+    gStars.forEach(s=>{
+      const prevX = s.px, prevY = s.py;
+      s.z -= speed*zoom;
+      if(s.z<=0){ s.z=canvas.width; s.x=(Math.random()-.5)*canvas.width; s.y=(Math.random()-.5)*canvas.height; }
+
+      const k = 128/s.z * zoom;
+      s.px = s.x*k; s.py = s.y*k;
+      const size = (1-s.z/canvas.width)*4;
+
+      if(phase==='warp'){
+        ctx.strokeStyle=`rgba(255,220,240,${1-s.z/canvas.width})`;
+        ctx.lineWidth=size*.7;
+        ctx.beginPath();
+        ctx.moveTo(prevX,prevY);
+        ctx.lineTo(s.px,s.py);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle=`rgba(255,220,240,${1-s.z/canvas.width})`;
+        ctx.beginPath();
+        ctx.arc(s.px,s.py,size*.5,0,Math.PI*2);
+        ctx.fill();
+      }
+    });
+
+    ctx.restore();
+
+    frame++;
+    if(frame<100){ speed=Math.min(speed+0.3,25); }
+    else if(frame<160){ speed=Math.max(speed-1.5,0.3); zoom=Math.max(zoom-.01,0.5); if(speed<1) phase='slow'; }
+    else { showFinalOverlay(); return; }
+
+    requestAnimationFrame(animGalaxy);
+  }
+  animGalaxy();
+}
+
+function showFinalOverlay(){
+  const overlay = document.getElementById('finalOverlay');
+  const photo = document.getElementById('finalPhoto');
+  const msg = document.getElementById('finalMsg');
+  const btn = document.getElementById('finalBtn');
+
+  overlay.style.opacity='1';
+  setTimeout(()=>{
+    photo.style.transform='scale(1)';
+  },200);
+  setTimeout(()=>{
+    msg.style.opacity='1';
+    msg.style.transform='translateY(0)';
+    msg.innerHTML='Ini kamu,<br>kesayangan aku 💖<br><span style="font-size:18px;font-family:Nunito,sans-serif;font-weight:600;">dari: Maiilove 🌸</span>';
+  }, 1500);
+  setTimeout(()=>{
+    btn.style.opacity='1';
+    btn.style.transform='translateY(0)';
+  }, 2500);
+
+  // activate scrolling marquee
+  setTimeout(startMarquee, 2500);
+
+  // love rain loop
+  setTimeout(()=>{
+    loveRain(30);
+    startRainLetters();
+  }, 3000);
+}
+
+// ============================================================
+// SCROLLING TEXT (marquee bawah)
+// ============================================================
+function startMarquee(){
+  const st = document.getElementById('scrollingText');
+  st.style.display='block';
+  const words = [
+    '💖 Kamu tuh bikin hari aku cerah terus... ',
+    '🌸 Senyum kamu itu gratis tapi berharga banget... ',
+    '✨ Semoga hari kamu selalu indah ya... ',
+    '💝 Aku bersyukur ada kamu di dunia ini... ',
+    '🥺 Kamu itu spesial, percayaa deh... ',
+    '💕 Semua hal tentang kamu itu menarik... ',
+    '🌟 Jangan pernah lupa betapa berharganya kamu... ',
+    '💗 Tetap jadi diri sendiri ya, kamu udah cukup kok... ',
+    '🎀 Kamu layak dapat semua hal baik di dunia... ',
+    '💖 — Maiilove 🌸  ',
+  ];
+  document.getElementById('marqueeText').textContent = words.join('  •  ');
+}
+
+// ============================================================
+// RAIN LETTERS (bintang jatuh berupa kata)
+// ============================================================
+function startRainLetters(){
+  const phrases = ['💖','💕','🌸','✨','💝','💗','🌺','⭐','💫','🎀','🥰'];
+  function dropOne(){
+    const el = document.createElement('div');
+    el.className='rainLetter';
+    el.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+    el.style.cssText = `left:${Math.random()*100}%;animation-duration:${Math.random()*3+4}s;font-size:${Math.random()*20+16}px;`;
+    document.getElementById('heartOverlay').appendChild(el);
+    setTimeout(()=>el.remove(), 7000);
+  }
+  setInterval(dropOne, 200);
+}
+
+// ============================================================
+// WA
+// ============================================================
+function openWA(){
+  const nomor='6287883931360'; // ganti nomor kamu
+  const pesan='Lucu banget sih 😭💖 Makasih ya';
+  window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`);
+}
+
+</script>
+</body>
+</html>
